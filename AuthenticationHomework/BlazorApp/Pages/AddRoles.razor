@@ -1,0 +1,54 @@
+﻿@page "/addroles"
+<!-- DO NOT FORGET USING STATEMENTS -->
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Configuration
+
+<!-- DO NOT FORGET INJECTIONS -->
+@inject RoleManager<IdentityRole> roleManager
+@inject UserManager<IdentityUser> userManager
+@inject IConfiguration config
+
+<h3>Add Roles</h3>
+
+<p>
+    You just added the default roles and elevated a user to administrator.
+</p>
+
+@code {
+    // DO NOT FORGET THIS PART
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetUpAuth();
+    }
+
+    // ASSIGN ROLES
+    private async Task SetUpAuth()
+    {
+        string[] roles = { "Administrator", "Employee" };
+
+        foreach (var role in roles)
+        {
+            var roleExists = await roleManager.RoleExistsAsync(role);
+
+            if (roleExists == false)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        string adminEmail = config.GetValue<string>("DefaultAdmin");
+        var user = await userManager.FindByEmailAsync(adminEmail);
+
+        if (user != null)
+        {
+            await userManager.AddToRoleAsync(user, "Administrator");
+        }
+
+        var employee = await userManager.FindByEmailAsync("dan@gmail.com");
+
+        if (employee != null)
+        {
+            await userManager.AddToRoleAsync(employee, "Employee");
+        }
+    }
+}

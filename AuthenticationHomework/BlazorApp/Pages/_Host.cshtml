@@ -1,0 +1,17 @@
+﻿@page "/"
+@namespace BlazorApp.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />
+
+
+<!-- HOMEWORK:
+        ~ a full authentication system
+        ~ a page that elevated a specified user to be an administrator if they are not one
+        ~ two roles - administrator and employee
+        ~ a page that only administrator can access (fetchdata)
+        ~ a page that people in either role can access (counter)
+-->
